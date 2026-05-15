@@ -8,7 +8,7 @@ Endpoints:
   POST /api/legal/analyze           — Sync version (testing only)
   GET  /health                      — Health check
 """
-
+from utils import async_retry
 import asyncio
 import json
 import logging
@@ -273,6 +273,21 @@ Structure your response with:
 
 Format in Markdown. Be precise and cite sources."""
 
+@async_retry(max_attempts=3)
+async def call_groq_with_retry(grounded_prompt, query):
+
+    response = await groq_client.chat.completions.create(
+        model=GROQ_MODEL_FAST,
+        messages=[
+            {"role": "system", "content": grounded_prompt},
+            {"role": "user", "content": query}
+        ],
+        temperature=0.2,
+        max_tokens=2048
+    )
+
+    return response
+
 
 async def deep_research_pipeline(query: str, language: str):
     """
@@ -404,16 +419,11 @@ async def deep_research_pipeline(query: str, language: str):
                 ai_answer = None
         
         if model_choice == "groq" or (model_choice == "gemini" and not gemini_client):
-            response = await groq_client.chat.completions.create(
-                model=GROQ_MODEL_FAST,
-                messages=[
-                    {"role": "system", "content": grounded_prompt},
-                    {"role": "user", "content": query}
-                ],
-                temperature=0.2,
-                max_tokens=2048
+           response = await call_groq_with_retry(
+               grounded_prompt,
+               query
             )
-            ai_answer = response.choices[0].message.content.strip()
+           ai_answer = response.choices[0].message.content.strip()
 
         # Stream reasoning text in chunks for live display
         if ai_answer:
