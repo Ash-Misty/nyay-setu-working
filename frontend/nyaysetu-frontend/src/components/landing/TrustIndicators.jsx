@@ -1,45 +1,45 @@
 import { motion } from 'framer-motion';
 import { Shield, Award, Users, TrendingUp, Clock, Lock } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 export default function TrustIndicators() {
-    const { t } = useTranslation('landing');
+    const { language } = useLanguage();
 
     const indicators = [
         {
             icon: Shield,
-            title: t('trustIndicators.bankSecurity.title'),
-            description: t('trustIndicators.bankSecurity.description'),
+            title: language === 'en' ? "Bank-Grade Security" : "बैंक-ग्रेड सुरक्षा",
+            description: language === 'en' ? "256-bit encryption protects your data" : "256-bit एन्क्रिप्शन आपके डेटा की सुरक्षा करता है",
             color: "#8b5cf6"
         },
         {
             icon: Award,
-            title: t('trustIndicators.govCertified.title'),
-            description: t('trustIndicators.govCertified.description'),
+            title: language === 'en' ? "Government Certified" : "सरकार द्वारा प्रमाणित",
+            description: language === 'en' ? "Approved by Ministry of Law & Justice" : "कानून और न्याय मंत्रालय द्वारा अनुमोदित",
             color: "#10b981"
         },
         {
             icon: Users,
-            title: t('trustIndicators.activeUsers.title'),
-            description: t('trustIndicators.activeUsers.description'),
+            title: language === 'en' ? "50,000+ Active Users" : "50,000+ सक्रिय उपयोगकर्ता",
+            description: language === 'en' ? "Growing community of satisfied citizens" : "संतुष्ट नागरिकों का बढ़ता समुदाय",
             color: "#6366f1"
         },
         {
             icon: TrendingUp,
-            title: t('trustIndicators.successRate.title'),
-            description: t('trustIndicators.successRate.description'),
+            title: language === 'en' ? "99% Success Rate" : "99% सफलता दर",
+            description: language === 'en' ? "Cases resolved efficiently and fairly" : "मामलों का कुशलता और निष्पक्षता से समाधान",
             color: "#ec4899"
         },
         {
             icon: Clock,
-            title: t('trustIndicators.availability.title'),
-            description: t('trustIndicators.availability.description'),
+            title: language === 'en' ? "24/7 Availability" : "24/7 उपलब्धता",
+            description: language === 'en' ? "Access justice anytime, anywhere" : "कभी भी, कहीं भी न्याय तक पहुंच",
             color: "#f59e0b"
         },
         {
             icon: Lock,
-            title: t('trustIndicators.dataPrivacy.title'),
-            description: t('trustIndicators.dataPrivacy.description'),
+            title: language === 'en' ? "Data Privacy" : "डेटा गोपनीयता",
+            description: language === 'en' ? "GDPR compliant & ISO certified" : "GDPR अनुपालक और ISO प्रमाणित",
             color: "#3b82f6"
         }
     ];
@@ -47,7 +47,7 @@ export default function TrustIndicators() {
     return (
         <section style={{
             padding: '5rem 2rem',
-            background: 'var(--bg-glass-strong)',
+            background: 'var(--bg-glass-strong)', // Use variable
             backdropFilter: 'var(--glass-blur)',
             borderTop: 'var(--border-glass)',
             borderBottom: 'var(--border-glass)'
@@ -76,20 +76,24 @@ export default function TrustIndicators() {
                             WebkitBackgroundClip: 'text',
                             WebkitTextFillColor: 'transparent'
                         }}>
-                            {t('trustIndicators.heading')}
+                            {language === 'en' ? 'Trusted by Thousands' : 'हजारों द्वारा विश्वसनीय'}
                         </span>
                     </h2>
                     <p style={{ color: 'var(--text-secondary)', fontSize: '1.125rem' }}>
-                        {t('trustIndicators.subheading')}
+                        {language === 'en'
+                            ? 'Your security and privacy are our top priorities'
+                            : 'आपकी सुरक्षा और गोपनीयता हमारी सर्वोच्च प्राथमिकताएं हैं'
+                        }
                     </p>
                 </motion.div>
 
+                {/* Indicators Scroll Container - Infinite Marquee */}
                 <div
                     className="trust-scroll-mask"
                     style={{
                         maxWidth: '100%',
                         overflow: 'hidden',
-                        padding: '1rem 0',
+                        padding: '1rem 0', // Extra vertical padding for hover effects
                         maskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)',
                         WebkitMaskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)'
                     }}
@@ -100,12 +104,13 @@ export default function TrustIndicators() {
                             display: 'flex',
                             gap: '2rem',
                             width: 'max-content',
-                            padding: '1rem 0'
+                            padding: '1rem 0' // Internal padding to prevent border clipping
                         }}
                     >
+                        {/* Duplicate lists for seamless loop */}
                         {[...indicators, ...indicators].map((item, idx) => (
                             <motion.div
-                                key={`${idx}-${item.title}`}
+                                key={`${idx}-${item.title}`} // Unique key using index and title
                                 initial={{ opacity: 0, scale: 0.9 }}
                                 whileInView={{ opacity: 1, scale: 1 }}
                                 viewport={{ once: true }}
@@ -113,7 +118,7 @@ export default function TrustIndicators() {
                                 whileHover={{ y: -10, transition: { duration: 0.3 } }}
                                 style={{
                                     padding: '4rem 3rem',
-                                    background: 'rgba(255, 255, 255, 0.4)',
+                                    background: 'rgba(255, 255, 255, 0.4)', // Light glass
                                     backdropFilter: 'blur(10px)',
                                     borderRadius: '24px',
                                     border: 'var(--border-glass)',
@@ -138,7 +143,7 @@ export default function TrustIndicators() {
                                     e.currentTarget.style.background = 'rgba(255, 255, 255, 0.4)';
                                 }}
                             >
-                                
+                                {/* Icon */}
                                 <div style={{
                                     width: '90px',
                                     height: '90px',
@@ -153,7 +158,7 @@ export default function TrustIndicators() {
                                     <item.icon size={42} style={{ color: item.color }} />
                                 </div>
 
-                                
+                                {/* Title */}
                                 <h3 style={{
                                     color: 'var(--text-main)',
                                     fontSize: '1.75rem',
@@ -163,7 +168,7 @@ export default function TrustIndicators() {
                                     {item.title}
                                 </h3>
 
-                                
+                                {/* Description */}
                                 <p style={{
                                     color: 'var(--text-secondary)',
                                     fontSize: '1.15rem',
@@ -191,3 +196,4 @@ export default function TrustIndicators() {
         </section>
     );
 }
+

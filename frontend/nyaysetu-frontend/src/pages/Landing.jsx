@@ -117,7 +117,7 @@ export default function Landing() {
                                 marginBottom: '2.5rem'
                             }}>
                                 <span style={{ color: 'var(--color-secondary)', fontSize: '0.875rem', fontWeight: '700', letterSpacing: '0.05em', textTransform: 'uppercase' }}>
-                                {t('landing:hero.badge')}
+                                    INDIA'S FIRST AI-POWERED JUDICIARY PLATFORM
                                 </span>
                             </div>
 
@@ -206,7 +206,7 @@ export default function Landing() {
                                     }}
                                 >
                                     <Download size={20} />
-                                    {t('landing:hero.installApp')}
+                                    Install App
                                 </motion.button>
                             </div>
                         </motion.div>

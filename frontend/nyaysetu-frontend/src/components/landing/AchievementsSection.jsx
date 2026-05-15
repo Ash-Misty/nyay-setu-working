@@ -1,26 +1,44 @@
 import { Trophy, Award, Sparkles, FileText, Presentation, Video } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useTranslation } from 'react-i18next';
+import { useLanguage } from '../../contexts/LanguageContext';
 import { useState } from 'react';
 
 export default function AchievementsSection() {
-    const { t } = useTranslation('landing');
+    const { language } = useLanguage();
     const [hoveredCard, setHoveredCard] = useState(null);
 
-    const achievements = [
+    const achievements = language === 'en' ? [
         {
-            title: t('achievements.vois.title'),
-            subtitle: t('achievements.vois.subtitle'),
-            badge: t('achievements.vois.badge'),
-            description: t('achievements.vois.description'),
+            title: "VOIS Finale",
+            subtitle: "Top 50 Finalist",
+            badge: "Ongoing",
+            description: "Selected among the top 50 finalists in the VOIS for Tech Innovation Marathon 2.0, a prestigious national competition demonstrating excellence in legal technology innovation.",
             icon: <Trophy size={40} />,
             color: '#FFD700',
             bgGradient: 'linear-gradient(135deg, #FFD700 0%, #FFA500 100%)'
         },
         {
-            title: t('achievements.esubmit.title'),
-            subtitle: t('achievements.esubmit.subtitle'),
-            description: t('achievements.esubmit.description'),
+            title: "e-Submit Pune Zonal",
+            subtitle: "Secured Rank 2",
+            description: "Achieved 2nd rank in the e-Submit Pune Zonal competition and won a cash prize, recognized for innovative solutions in digital legal services.",
+            icon: <Award size={40} />,
+            color: '#C0C0C0',
+            bgGradient: 'linear-gradient(135deg, #C0C0C0 0%, #808080 100%)'
+        }
+    ] : [
+        {
+            title: "VOIS फाइनल",
+            subtitle: "शीर्ष 50 फाइनलिस्ट",
+            badge: "जारी",
+            description: "VOIS for Tech Innovation Marathon 2.0 में शीर्ष 50 फाइनलिस्टों में चयनित, एक प्रतिष्ठित राष्ट्रीय प्रतियोगिता जो कानूनी प्रौद्योगिकी नवाचार में उत्कृष्टता का प्रदर्शन करती है।",
+            icon: <Trophy size={40} />,
+            color: '#FFD700',
+            bgGradient: 'linear-gradient(135deg, #FFD700 0%, #FFA500 100%)'
+        },
+        {
+            title: "e-Submit पुणे ज़ोनल",
+            subtitle: "रैंक 2 हासिल की",
+            description: "e-Submit पुणे ज़ोनल प्रतियोगिता में दूसरी रैंक हासिल की और नकद पुरस्कार जीता, डिजिटल कानूनी सेवाओं में नवीन समाधानों के लिए मान्यता प्राप्त।",
             icon: <Award size={40} />,
             color: '#C0C0C0',
             bgGradient: 'linear-gradient(135deg, #C0C0C0 0%, #808080 100%)'
@@ -44,7 +62,7 @@ export default function AchievementsSection() {
                     }}>
                         <Sparkles size={24} style={{ color: 'var(--color-secondary)' }} />
                         <span style={{ color: 'var(--color-secondary)', fontSize: '0.95rem', fontWeight: '700' }}>
-                            {t('achievements.badge')}
+                            {language === 'en' ? 'OUR ACHIEVEMENTS' : 'हमारी उपलब्धियां'}
                         </span>
                     </div>
 
@@ -54,18 +72,20 @@ export default function AchievementsSection() {
                         color: 'var(--text-main)',
                         marginBottom: '1rem'
                     }}>
-                        {t('achievements.heading')}
+                        {language === 'en' ? 'Recognized for ' : 'मान्यता प्राप्त '}
                         <span style={{
                             background: 'linear-gradient(135deg, #3F5DCC 0%, #7C5CFF 100%)',
                             WebkitBackgroundClip: 'text',
                             WebkitTextFillColor: 'transparent'
                         }}>
-                            {t('achievements.headingHighlight')}
+                            {language === 'en' ? 'Excellence' : 'उत्कृष्टता के लिए'}
                         </span>
                     </h2>
 
                     <p style={{ fontSize: '1.25rem', color: 'var(--text-secondary)', maxWidth: '600px', margin: '0 auto' }}>
-                        {t('achievements.subheading')}
+                        {language === 'en'
+                            ? 'Celebrating our journey of innovation and recognition in legal technology'
+                            : 'कानूनी प्रौद्योगिकी में नवाचार और मान्यता की हमारी यात्रा का जश्न'}
                     </p>
                 </div>
 
@@ -155,9 +175,10 @@ export default function AchievementsSection() {
                                             marginBottom: '1rem',
                                             textAlign: 'center'
                                         }}>
-                                            {t('achievements.overlay.viewMaterials')}
+                                            {language === 'en' ? 'View Submission Materials' : 'सबमिशन सामग्री देखें'}
                                         </h4>
 
+                                        {/* Report Button */}
                                         <motion.a
                                             href="/VOIS_Submission/VOIS_Final_Report_NyaySetu.pdf"
                                             target="_blank"
@@ -184,9 +205,10 @@ export default function AchievementsSection() {
                                             }}
                                         >
                                             <FileText size={22} />
-                                            {t('achievements.overlay.viewReport')}
+                                            {language === 'en' ? 'View Report' : 'रिपोर्ट देखें'}
                                         </motion.a>
 
+                                        {/* Presentation Button */}
                                         <motion.a
                                             href="/VOIS_Submission/Nyay_Setu_VOIS_Presentation_PDF.pdf"
                                             target="_blank"
@@ -213,9 +235,10 @@ export default function AchievementsSection() {
                                             }}
                                         >
                                             <Presentation size={22} />
-                                            {t('achievements.overlay.viewPresentation')}
+                                            {language === 'en' ? 'View Presentation' : 'प्रस्तुति देखें'}
                                         </motion.a>
 
+                                        {/* Video Button */}
                                         <motion.a
                                             href="/VOIS_Submission/NyaySetu_VOIS.mp4"
                                             target="_blank"
@@ -242,7 +265,7 @@ export default function AchievementsSection() {
                                             }}
                                         >
                                             <Video size={22} />
-                                            {t('achievements.overlay.watchVideo')}
+                                            {language === 'en' ? 'Watch Video' : 'वीडियो देखें'}
                                         </motion.a>
                                     </motion.div>
                                 )}
@@ -278,9 +301,10 @@ export default function AchievementsSection() {
                                             textAlign: 'center',
                                             margin: 0
                                         }}>
-                                            {t('achievements.overlay.certificateTitle')}
+                                            {language === 'en' ? 'Certificate of Achievement' : 'उपलब्धि प्रमाणपत्र'}
                                         </h4>
 
+                                        {/* Certificate Image */}
                                         <motion.a
                                             href="/esubmit_certificate.png"
                                             target="_blank"
@@ -324,7 +348,7 @@ export default function AchievementsSection() {
                                             }}
                                         >
                                             <Award size={20} />
-                                            {t('achievements.overlay.viewCertificate')}
+                                            {language === 'en' ? 'View Certificate' : 'प्रमाणपत्र देखें'}
                                         </motion.a>
                                     </motion.div>
                                 )}
@@ -349,6 +373,7 @@ export default function AchievementsSection() {
 
                             {/* Content */}
                             <div style={{ position: 'relative', zIndex: 1, flex: 1, display: 'flex', flexDirection: 'column' }}>
+                                {/* Title */}
                                 <h3 style={{
                                     color: 'var(--text-main)',
                                     fontSize: '1.75rem',
@@ -359,6 +384,7 @@ export default function AchievementsSection() {
                                     {achievement.title}
                                 </h3>
 
+                                {/* Subtitle and Badge */}
                                 <div style={{
                                     display: 'flex',
                                     gap: '0.75rem',
@@ -378,6 +404,7 @@ export default function AchievementsSection() {
                                         {achievement.subtitle}
                                     </div>
 
+                                    {/* Ongoing Badge (only for VOIS) */}
                                     {achievement.badge && (
                                         <div style={{
                                             display: 'inline-block',
@@ -394,6 +421,7 @@ export default function AchievementsSection() {
                                     )}
                                 </div>
 
+                                {/* Description */}
                                 <p style={{
                                     color: 'var(--text-secondary)',
                                     fontSize: '1.1rem',
