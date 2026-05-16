@@ -43,7 +43,7 @@ const STAGES = [
         color: '#10b981'
     },
     {
-        label: 'Appeal',
+        label: 'Verdict / Closed',
         icon: Scale,
         tooltip: 'The verdict has been delivered. You may file an appeal within the statutory period if needed.',
         color: '#f59e0b'

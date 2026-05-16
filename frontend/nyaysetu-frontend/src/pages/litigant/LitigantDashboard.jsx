@@ -425,7 +425,9 @@ export default function LitigantDashboard() {
                                     <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
                                         {t('litigant.filed')}: {caseItem.date}
                                     </p>
-                                    <CaseStepper currentStatus={caseItem.status} compact={true} />
+                                    <div style={{ marginTop: '0.5rem' }}>
+                                        <CaseStepper currentStatus={caseItem.status} judicialStage={caseItem.currentJudicialStage} compact={true} />
+                                    </div>
                                 </div>
                             ))
                         )}
