@@ -28,6 +28,7 @@ from synthesizer import synthesize_answers
 from avatar_speech import get_interim_messages, convert_to_hinglish, detect_domain
 from services.kanoon_search import build_kanoon_context
 from routers.forensics import router as forensics_router
+from routers.modi_ocr import router as modi_ocr_router
 
 # Initialize clients for deep research pipeline
 from groq import AsyncGroq
@@ -64,6 +65,7 @@ app.add_middleware(
 )
 
 app.include_router(forensics_router)
+app.include_router(modi_ocr_router)
 
 
 # ─── Models ───────────────────────────────────────────────────────────────────
