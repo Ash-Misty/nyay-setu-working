@@ -94,14 +94,14 @@ export default function About() {
                     <h1 style={{
                         fontSize: 'clamp(2.5rem, 5vw, 3.75rem)',
                         fontWeight: '800',
-                        color: 'var(--color-primary)',
+                        color: 'var(--text-main)',
                         marginBottom: '1.5rem',
                         lineHeight: '1.2',
                         letterSpacing: '-0.02em'
                     }}>
                         Building India's{' '}
                         <span style={{
-                            background: 'linear-gradient(135deg, #3F5DCC, #7C5CFF)',
+                            background:'linear-gradient(135deg, #7C5CFF 0%, #3F5DCC 100%)',
                             WebkitBackgroundClip: 'text',
                             WebkitTextFillColor: 'transparent',
                             backgroundClip: 'text'
@@ -145,7 +145,7 @@ export default function About() {
                             borderRadius: '2rem',
                             padding: '3rem',
                             textAlign: 'center',
-                            boxShadow: '0 4px 20px rgba(30, 42, 68, 0.05)',
+                            boxShadow: 'var(--shadow-glass)',
                             position: 'relative'
                         }}
                     >
@@ -486,7 +486,7 @@ export default function About() {
                         background: 'var(--bg-surface)',
                         border: '1px solid var(--border-light)',
                         borderRadius: '2rem',
-                        boxShadow: '0 10px 40px rgba(30, 42, 68, 0.04)'
+                        boxShadow: 'var(--shadow-glass)'
                     }}
                 >
                     <h2 style={{
