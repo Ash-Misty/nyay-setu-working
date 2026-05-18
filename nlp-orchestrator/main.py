@@ -210,6 +210,7 @@ async def get_models():
             "available": bool(GEMINI_API_KEY)
         }
     }
+
 @app.post("/api/legal/analyze-stream")
 async def analyze_stream(body: LegalQuery, request: Request):
     """
