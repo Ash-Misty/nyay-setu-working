@@ -59,7 +59,7 @@ export default function Header({ hideAuthButtons = false }) {
 
     const navItems = [
         { labelKey: 'header.nav.home',        href: '/',            isRoute: true },
-        { labelKey: 'header.nav.features',    href: '#features' },
+        { labelKey: 'header.nav.features',    href: '/#features' },
         { labelKey: 'header.nav.constitution',href: '/constitution', isRoute: true },
         { labelKey: 'header.nav.aiAssistant', action: () => setShowAIModal(true) },
         { labelKey: 'header.nav.about',       href: '/about',       isRoute: true },

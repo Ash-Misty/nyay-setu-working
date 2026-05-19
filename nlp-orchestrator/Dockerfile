@@ -1,29 +1,50 @@
-# ⚡ FIX: Use a pre-compiled image containing CUDA and core ML dependencies
-FROM pytorch/pytorch:2.2.1-cuda12.1-cudnn8-runtime
+# Stage 1: Build
+FROM python:3.11-slim AS builder
 
 WORKDIR /app
 
-# Prevent Python from writing pyc files and buffering stdout
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
-# Install any system level build requirements if needed (usually skipped now)
+# Install build dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements and install only light remaining packages (fastapi, groq, etc)
+# Copy requirements
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the application source code
-COPY . .
+# Create virtual environment
+RUN python -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
 
-# Port for your Python service
+# Upgrade pip and install dependencies
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
+
+# Stage 2: Runtime
+FROM python:3.11-slim
+
+WORKDIR /app
+
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
+# Create non-root user BEFORE copying files
+RUN useradd -m -r appuser
+
+# Copy virtual environment from builder and grant ownership
+COPY --from=builder --chown=appuser:appuser /opt/venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
+# Copy application files with correct ownership
+COPY --chown=appuser:appuser . .
+
+# Expose app port
 EXPOSE 8001
 
-# Secure the container with a non-root user
-RUN useradd -m appuser && chown -R appuser /app
+# Switch to non-root user
 USER appuser
 
+# Start application
 CMD ["python", "main.py"]
