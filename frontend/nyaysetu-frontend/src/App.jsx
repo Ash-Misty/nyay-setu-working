@@ -43,6 +43,9 @@ const LawyerChatPage = lazy(() => import('./pages/litigant/LawyerChatPage'));
 const ProfilePage = lazy(() => import('./pages/litigant/ProfilePage'));
 const ForensicsPage = lazy(() => import('./pages/litigant/ForensicsPage'));
 const DocumentGeneratePage = lazy(() => import('./pages/litigant/DocumentGeneratePage'));
+const FindLawyerPage = lazy(() => import('./pages/litigant/FindLawyerPage'));
+const LawyerFeedbackPage = lazy(() => 
+  import('./pages/litigant/LawyerFeedbackPage'));
 
 
 // Judge Pages (keep only those still used)
@@ -146,6 +149,8 @@ function App({ swRegistration }) {
                                     <Route path="case-diary/:caseId" element={<CaseDetailPage />} />
                                     <Route path="hearings" element={<HearingsPage />} />
                                     <Route path="chat" element={<LawyerChatPage />} />
+                                    <Route path="find-lawyer" element={<FindLawyerPage />} />
+                                    <Route path="feedback" element={<LawyerFeedbackPage />} />
                                     <Route path="profile" element={<ProfilePage />} />
                                     <Route path="forensics" element={<ForensicsPage />} />
                                     <Route path="generate-document" element={<DocumentGeneratePage />} />
@@ -221,7 +226,7 @@ function App({ swRegistration }) {
                                     <Route path="investigation/:id" element={<InvestigationDetailsPage />} />
                                     <Route path="profile" element={<ProfilePage />} />
                                 </Route>
-
+                                
                                 <Route path="/unauthorized" element={
                                     <div style={{ textAlign: 'center', padding: '3rem' }}>
                                         <h1>Unauthorized</h1>
