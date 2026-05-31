@@ -41,7 +41,7 @@ class NotificationService {
             // Merged environment log routing rules
             if (!isProduction) {
                 if (import.meta.env.DEV) {
-                    console.log('Connecting to notification WebSocket...');
+                    console.log('Connecting to WebSocket:', wsUrl);
                 }
             }
 
@@ -49,6 +49,13 @@ class NotificationService {
 
             // In-band Authentication frame payload dispatch
             this.ws.onopen = () => {
+                if (!isProduction) {
+                    if (import.meta.env.DEV) {
+                        console.log('✅ WebSocket connected');
+                    }
+                }
+                
+                // Securely transmit token in the body frame
                 this.ws.send(JSON.stringify({
                     type: 'AUTH',
                     token: token
