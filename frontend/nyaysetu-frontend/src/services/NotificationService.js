@@ -38,7 +38,7 @@ class NotificationService {
 
             this.isConnecting = true;
 
-            // Merged environment log routing rules
+            // Merged environment log routing rules without conflicts
             if (!isProduction) {
                 if (import.meta.env.DEV) {
                     console.log('Connecting to WebSocket:', wsUrl);
