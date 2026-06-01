@@ -9,8 +9,17 @@ import asyncio
 import logging
 from google import genai
 from groq import AsyncGroq
-from config import GROQ_API_KEY, GROQ_MODEL_FAST, GEMINI_API_KEY, GEMINI_MODEL
-from utils import CircuitBreaker, retry_transient
+from config import (
+    GROQ_API_KEY,
+    GROQ_MODEL_FAST,
+    GEMINI_API_KEY,
+    GEMINI_MODEL,
+    RETRY_ENABLED,
+    RETRY_MAX_ATTEMPTS,
+    RETRY_DELAY_SECONDS,
+    PROVIDER_ORDER,
+)
+from utils import CircuitBreaker, retry_transient, is_retryable_exception
 
 logger = logging.getLogger(__name__)
 
@@ -61,6 +70,96 @@ def _fallback_response(question: str, source: str) -> dict:
         "error": "circuit_open",
         "is_fallback": True
     }
+
+
+def build_provider_queue(primary_provider: str) -> list[str]:
+    """Return ordered, deduplicated provider list with primary first."""
+    ordered = [p for p in PROVIDER_ORDER if p in {"gemini", "groq"}]
+    if primary_provider in ordered:
+        ordered = [primary_provider] + [p for p in ordered if p != primary_provider]
+
+    # If gemini is not configured, remove it
+    if "gemini" in ordered and not gemini_client:
+        ordered = [p for p in ordered if p != "gemini"]
+
+    # Deduplicate while preserving order
+    seen = set()
+    result = []
+    for p in ordered:
+        if p not in seen:
+            seen.add(p)
+            result.append(p)
+    return result
+
+
+async def _attempt_provider(provider: str, question: str, kanoon_context: str | None = None) -> dict:
+    """Invoke a single provider once, honoring circuit-breaker state and returning a structured result or fallback."""
+    if provider == "gemini":
+        if not gemini_client:
+            return _fallback_response(question, "gemini")
+        if not gemini_breaker.is_available():
+            logger.warning("[CircuitBreaker/Gemini] OPEN - skipping")
+            return _fallback_response(question, "gemini")
+        try:
+            res = await _call_gemini_with_retry(question, kanoon_context)
+            gemini_breaker.call_succeeded()
+            return res
+        except Exception as exc:
+            gemini_breaker.call_failed()
+            logger.error(f"[Research/Gemini] Provider attempt failed: {exc}")
+            raise
+
+    if provider == "groq":
+        if not groq_breaker.is_available():
+            logger.warning("[CircuitBreaker/Groq] OPEN - skipping")
+            return _fallback_response(question, "groq")
+        try:
+            res = await _call_groq_with_retry(question, kanoon_context)
+            groq_breaker.call_succeeded()
+            return res
+        except Exception as exc:
+            groq_breaker.call_failed()
+            logger.error(f"[Research/Groq] Provider attempt failed: {exc}")
+            raise
+
+    return _fallback_response(question, provider)
+
+
+async def execute_with_fallback(question: str, kanoon_context: str | None = None, primary_provider: str = "gemini") -> dict:
+    """Coordinator: try primary provider with retries, then fallback to secondary providers.
+
+    Returns the first successful provider result or a unified fallback response when all fail.
+    """
+    providers = build_provider_queue(primary_provider)
+    if not providers:
+        return _fallback_response(question, "all_providers_failed")
+
+    last_error = None
+    for provider in providers:
+        attempt = 1
+        while attempt <= RETRY_MAX_ATTEMPTS:
+            try:
+                result = await _attempt_provider(provider, question, kanoon_context)
+                # If provider returns a fallback-shaped response, treat as failure and try next provider
+                if result.get("is_fallback"):
+                    last_error = result.get("error", "fallback")
+                    break
+                return result
+            except Exception as exc:
+                last_error = exc
+                # Decide whether to retry this exception
+                if not RETRY_ENABLED or not is_retryable_exception(exc) or attempt >= RETRY_MAX_ATTEMPTS:
+                    logger.error(f"[Research] Provider {provider} terminal error: {exc}")
+                    break
+                wait = RETRY_DELAY_SECONDS * attempt
+                logger.warning(f"[Research] Transient error from {provider}, retry {attempt} in {wait}s: {exc}")
+                await asyncio.sleep(wait)
+                attempt += 1
+
+        logger.warning(f"[Research] Provider {provider} exhausted, trying next provider if available")
+
+    logger.error(f"[Research] All providers exhausted. Last error: {last_error}")
+    return _fallback_response(question, "all_providers_failed")
 
 
 @retry_transient
@@ -158,10 +257,8 @@ async def run_parallel_research(
         question = item["question"]
         model = item["model"]
 
-        if model == "gemini":
-            tasks.append(call_gemini_async(question, kanoon_context))
-        else:
-            tasks.append(call_groq_async(question, kanoon_context))
+        # Use unified coordinator to handle retries and fallback ordering
+        tasks.append(execute_with_fallback(question, kanoon_context, primary_provider=model))
 
     results = await asyncio.gather(*tasks, return_exceptions=False)
     return list(results)

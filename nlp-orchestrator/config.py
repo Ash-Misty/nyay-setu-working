@@ -14,6 +14,11 @@ GEMINI_API_KEY: str = os.getenv("GOOGLE_GEMINI_API_KEY", "")
 # Model names
 GROQ_MODEL_FAST: str = "llama-3.3-70b-versatile"   # Current recommended model
 GEMINI_MODEL: str = "gemini-1.5-flash"             # Fast + deep reasoning
+# Retry / fallback configuration
+RETRY_ENABLED: bool = True
+RETRY_MAX_ATTEMPTS: int = 2
+RETRY_DELAY_SECONDS: float = 1.0
+PROVIDER_ORDER: list[str] = ["gemini", "groq"]
 TROCR_MODEL_NAME: str = os.getenv("TROCR_MODEL_NAME", "Piyush3142/trocr-sanskrit-ocr")
 TROCR_DEVICE: str = os.getenv("TROCR_DEVICE", "")
 HF_TOKEN: str = os.getenv("HF_TOKEN", "")
