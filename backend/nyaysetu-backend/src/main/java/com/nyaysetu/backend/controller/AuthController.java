@@ -224,7 +224,7 @@ public class AuthController {
     // ==================== FACE LOGIN ENDPOINTS ====================
 
     @PostMapping("/face/enroll")
-    public ResponseEntity<?> enrollFace(@Valid @RequestBody FaceEnrollRequest req) {
+    public ResponseEntity<?> enrollFace(@Valid @RequestBody FaceEnrollRequest req, Authentication auth) {
         try {
             User user = authService.findByEmail(auth.getName());
             faceRecognitionService.enrollFace(user.getId(), req.getFaceDescriptor());
