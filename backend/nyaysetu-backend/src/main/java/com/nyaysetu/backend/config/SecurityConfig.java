@@ -234,18 +234,6 @@ public class SecurityConfig {
                                 ))
                 )
                 .authorizeHttpRequests(auth -> auth
-<<<<<<< HEAD
-                        // 2. Only strictly public endpoints allowed
-                        .requestMatchers("/api/auth/register", "/api/auth/login", "/api/auth/forgot-password").permitAll()
-                        .requestMatchers("/api/health/**").permitAll()
-                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**").permitAll()
-                        .requestMatchers("/ws/**").permitAll()
-
-                        // 3. The exact fix for the bug: Everything else MUST be authenticated
-                        .anyRequest().authenticated()
-                )
-
-=======
                         // ── Public endpoints ──────────────────────────────────────────────
                         .requestMatchers(
                                 "/api/v1/auth/register",
@@ -344,9 +332,8 @@ public class SecurityConfig {
                         ).hasAnyRole("POLICE", "JUDGE", "SUPER_JUDGE", "ADMIN")
 
                         // ── Everything else requires authentication ────────────────────────
-                        .anyRequest().authenticated()
+                        .anyRequest().authenticated();
                 )
->>>>>>> origin/main
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(xssSanitizationFilter, UsernamePasswordAuthenticationFilter.class)
