@@ -46,7 +46,8 @@ export default function Footer() {
         { label: t('common:header.nav.upcomingFeatures'), href: '/upcoming-features', isRoute: true },
         { label: t('common:header.nav.constitution'), href: '/constitution', isRoute: true },
         { label: t('common:header.nav.aiAssistant'), action: () => setShowAIModal(true) },
-        { label: t('common:header.nav.about'), href: '/about', isRoute: true }
+        { label: t('common:header.nav.about'), href: '/about', isRoute: true },
+        { label: 'FAQ', href: '/faq', isRoute: true }
     ];
 
     const legalLinks = [
