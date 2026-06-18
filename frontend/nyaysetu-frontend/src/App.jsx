@@ -19,6 +19,7 @@ import GuestOnboardingHint from './components/guest/GuestOnboardingHint';
 import OAuthSuccess from './pages/OAuthSuccess';
 
 // Lazy load pages for better performance
+const retryLazy = (fn) => lazy(() => fn().catch(() => fn()));
 const Landing = lazy(() => import('./pages/Landing'));
 const Constitution = lazy(() => import('./pages/Constitution'));
 const Login = lazy(() => import('./pages/Login'));
